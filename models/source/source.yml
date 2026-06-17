@@ -1,0 +1,31 @@
+version : 2
+
+sources:
+  - name: raw_bi_car
+    database : postgres
+    schema: public
+    tables:
+    - name: car_sales
+      description: 'Tabla de datos de ventas desde la db transaccional'
+      columns:
+        - name: ddate
+          description: "Fecha y hora en la que se realizó la venta del vehículo."
+          tests:
+            - not_null
+
+        - name: sale_price
+          description: "Precio total de venta del vehículo en moneda local."
+          tests:
+            - not_null
+
+        - name: commission_rate
+          description: "Porcentaje de comisión aplicado al vendedor sobre la venta (expresado como valor decimal)."
+          tests:
+            - not_null
+
+        - name: commission_earned
+          description: "Monto de comisión ganado por el vendedor en la transacción."
+          tests:
+            - not_null
+
+
