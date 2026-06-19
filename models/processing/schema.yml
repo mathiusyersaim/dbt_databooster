@@ -1,0 +1,20 @@
+
+models:
+  - name: psg_montly_sales_make   # <- cámbialo por el nombre real del .sql
+    description: "Modelo agregado a nivel mensual que resume ventas y comisiones por vendedor y marca de vehículo."
+
+    columns:
+      - name: ddate
+        description: "Fecha truncada al mes (primer día del mes) basada en la fecha original de la venta."
+
+      - name: salesperson
+        description: "Nombre del vendedor responsable de las ventas durante el periodo."
+
+      - name: car_make
+        description: "Marca del vehículo vendido (por ejemplo: Ford, Nissan, Toyota)."
+
+      - name: totalsales
+        description: "Total de ventas calculado como la suma de (sale_price - commission_rate) agregada por mes, vendedor y marca."
+
+      - name: totalcom
+        description: "Total de comisiones ganadas por el vendedor, agregadas por mes, vendedor y marca."

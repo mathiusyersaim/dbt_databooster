@@ -1,0 +1,89 @@
+version: 2
+
+models:
+  - name: dim_carmake
+    description: >
+      Dimensión de marcas de vehículos generada a partir de los datos agregados
+      de ventas mensuales. Contiene una fila por cada marca de vehículo (car_make)
+      con un identificador único asignado mediante una función de ranking.
+
+    columns:
+      - name: id_carmake
+        description: >
+          Identificador único de la marca del vehículo, generado utilizando la función
+          RANK() ordenada alfabéticamente por car_make.
+        tests:
+          - unique
+          - not_null
+
+      - name: car_make
+        description: >
+          Nombre de la marca del vehículo (por ejemplo: Toyota, Ford, Nissan),
+          proveniente del modelo psg_montly_sales_make.
+        tests:
+          - not_null
+
+  - name: dim_salesperson
+    description: >
+      Dimensión de vendedores generada a partir de los datos agregados de ventas
+      mensuales. Contiene una fila por cada salesperson con un identificador único
+      asignado mediante una función de ranking.
+
+    columns:
+      - name: id_salesperson
+        description: >
+          Identificador único del vendedor generado utilizando la función RANK()
+          ordenada alfabéticamente por el nombre del salesperson.
+        tests:
+          - unique
+          - not_null
+
+      - name: salesperson
+        description: >
+          Nombre del vendedor responsable de la venta. Este campo proviene del modelo
+          psg_montly_sales_make y se utiliza para relacionar con la tabla de hechos.
+        tests:
+          - not_null
+
+  - name: fact_montly_sales
+    description: >
+      Tabla de hechos que contiene las métricas agregadas de ventas mensuales.
+      Integra información de ventas con las dimensiones de vendedores y marcas
+      de vehículos, permitiendo análisis por fecha, vendedor y tipo de vehículo.
+
+    columns:
+      - name: ddate
+        description: >
+          Fecha asociada a la venta o al período agregado. Se utiliza para análisis
+          temporal de las métricas de ventas.
+        tests:
+          - not_null
+
+      - name: ID_SALESPERSON
+        description: >
+          Identificador del vendedor proveniente de la dimensión dim_salesperson.
+          Permite relacionar las métricas de ventas con cada vendedor.
+        
+        tests:
+            - not_null
+            - relationships:
+                to: ref('dim_salesperson')
+                field: ID_SALESPERSON
+      - name: ID_CARMAKE
+        description: >
+          Identificador de la marca del vehículo proveniente de la dimensión dim_carmake.
+          Facilita el análisis de ventas por tipo de marca.
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_carmake')
+              field: ID_CARMAKE
+
+      - name: totalsales
+        description: >
+          Métrica agregada que representa el total de ventas realizadas en el período,
+          normalmente expresada en valor monetario.
+
+      - name: totalcom
+        description: >
+          Total de comisión generada por las ventas en el período, asociada a los vendedores.
